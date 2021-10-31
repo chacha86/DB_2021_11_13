@@ -16,6 +16,7 @@ public class App {
 	ArrayList<Article> articles = new ArrayList<>();
 	ArrayList<Member> members = new ArrayList<>();
 	ArrayList<Reply> replies = new ArrayList<>();
+	ArrayList<Like> likes = new ArrayList<>();
 	
 	int articleNo = 1;
 	Member loginedUser = null; // 로그인한 유저
@@ -203,7 +204,34 @@ public class App {
 				
 				
 			} else if(rcmd == 2) {
-				System.out.println("[좋아요]");
+				
+				//로그인한 유저가 해당 게시물에 좋아요 체크했는지 따져봄
+				String loginId =  loginedUser.getLoginId();
+				int articleNo = a.getNo();
+				int targetIndex = -1; 
+				
+				for(int i = 0; i < likes.size(); i++) {
+					Like like = likes.get(i);
+					
+					if(like.getArticleNo() == articleNo && like.getUserId() == loginId) {
+						targetIndex = i;
+						break;
+					}
+				}
+				
+				if(targetIndex == -1) {
+					//좋아요 저장
+					// 누가(회원아이디) , 어떤(게시물 아이디), 날짜(오늘날짜)
+					Like like = new Like(loginedUser.getLoginId(), a.getNo(), getCurrentData());
+					likes.add(like);
+					System.out.println("해당게시물을 좋아합니다.");
+					
+				} else {
+					likes.remove(targetIndex);
+					System.out.println("해당 게시물의 좋아요를 해제합니다.");
+				}
+				
+				
 			} else if(rcmd == 3) {
 				System.out.println("[수정]");
 			} else if(rcmd == 4) {
