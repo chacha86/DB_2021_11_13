@@ -163,6 +163,16 @@ public class App {
 		System.out.println("-------------------");
 		System.out.println("작성자 : 익명");
 		System.out.println("등록날짜: " + a.getRegDate());
+		
+		
+		Like like = getLikeByAnoAndId(a.getNo(), loginedUser.getLoginId());
+		
+		if(like == null) {
+			System.out.println("좋아요 : ♡ " + getLikeCountByAno(a.getNo()));
+		} else {			
+			System.out.println("좋아요 : ♥ " + getLikeCountByAno(a.getNo()));			
+		}
+		
 		System.out.println("===================");
 		System.out.println("======== 댓글 =======");
 		for(int i = 0; i < replies.size(); i++) {
@@ -177,6 +187,19 @@ public class App {
 			
 		}
 		
+	}
+
+	private int getLikeCountByAno(int no) {
+
+		int count = 0;
+		
+		for(int i = 0; i < likes.size(); i++) {
+			if(likes.get(i).getArticleNo() == no) {
+				count++;				
+			}
+		}
+		
+		return count;
 	}
 
 	private void readProcess(Article a) {
@@ -208,29 +231,21 @@ public class App {
 				//로그인한 유저가 해당 게시물에 좋아요 체크했는지 따져봄
 				String loginId =  loginedUser.getLoginId();
 				int articleNo = a.getNo();
-				int targetIndex = -1; 
 				
-				for(int i = 0; i < likes.size(); i++) {
-					Like like = likes.get(i);
-					
-					if(like.getArticleNo() == articleNo && like.getUserId() == loginId) {
-						targetIndex = i;
-						break;
-					}
-				}
+				Like like = getLikeByAnoAndId(articleNo, loginId);
 				
-				if(targetIndex == -1) {
+				if(like == null) {
 					//좋아요 저장
 					// 누가(회원아이디) , 어떤(게시물 아이디), 날짜(오늘날짜)
-					Like like = new Like(loginedUser.getLoginId(), a.getNo(), getCurrentData());
-					likes.add(like);
+					likes.add(new Like(loginedUser.getLoginId(), a.getNo(), getCurrentData()));
 					System.out.println("해당게시물을 좋아합니다.");
 					
 				} else {
-					likes.remove(targetIndex);
+					likes.remove(like);
 					System.out.println("해당 게시물의 좋아요를 해제합니다.");
 				}
 				
+				printArticleByNo(a);
 				
 			} else if(rcmd == 3) {
 				System.out.println("[수정]");
@@ -243,6 +258,19 @@ public class App {
 		
 	}
 
+	public Like getLikeByAnoAndId(int ano, String loginId) {
+		
+		for(int i = 0; i < likes.size(); i++) {
+			Like like = likes.get(i);
+			
+			if(like.getArticleNo() == ano && like.getUserId() == loginId) {
+				return like;
+			}
+		}
+		
+		return null;		
+	}
+	
 	// 함수 -> 기능
 	// 코드 재활용
 	// 코드의 구조화 -> 집중
