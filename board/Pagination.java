@@ -9,6 +9,10 @@ public class Pagination {
 	private int firstPageNo = 1;
 	private int totalItemCount;
 	
+
+	public void setTotalItemCount(int totalItemCount) {
+		this.totalItemCount = totalItemCount;
+	}
 	
 	public Pagination(int totalItemCount) {
 		this.totalItemCount = totalItemCount;

@@ -49,6 +49,7 @@ public class App {
 				}
 
 			} else if (command.equals("list")) {
+				System.out.println(articles.size());
 				list(articles);
 
 			} else if (command.equals("update")) {
@@ -175,19 +176,28 @@ public class App {
 
 	public void read() {
 		System.out.println("상세보기할 게시물 선택 : ");
-		int no = Integer.parseInt(sc.nextLine());
-		int index = getIndexByAritlceNo(no);
-
-		if (index != -1) {
-			Article a = articles.get(index);
-
-			printArticleByNo(a);
-			// 상세보기 기능
-			readProcess(a);
-
-		} else {
-			System.out.println("없는 게시물입니다.");
+		
+		//1. 입력된 값에 문자가 포함되어 있는지를 따지는 코드 작성
+		
+		//2. 예외처리
+		try {
+			int no = Integer.parseInt(sc.nextLine());
+			int index = getIndexByAritlceNo(no);
+			
+			if (index != -1) {
+				Article a = articles.get(index);
+				
+				printArticleByNo(a);
+				// 상세보기 기능
+				readProcess(a);
+				
+			} else {
+				System.out.println("없는 게시물입니다.");
+			}			
+		} catch(Exception e) {
+			System.out.println("숫자만 입력 가능합니다.");
 		}
+		
 
 	}
 
@@ -390,6 +400,8 @@ public class App {
 	// 게시물 목록을 보여주는 함수
 	public void list(ArrayList<Article> articleList) {
 
+		System.out.println(pagination.getStartIndex());
+		System.out.println(pagination.getEndIndex());
 		for (int i = pagination.getStartIndex(); i < pagination.getEndIndex(); i++) {
 			Article a = articleList.get(i);
 			System.out.println("번호 : " + a.getNo());
@@ -424,7 +436,8 @@ public class App {
 		String regDate = getCurrentData();
 		Article a = new Article(articleNo, title, loginedUser.getNickname(), body, regDate);
 		articles.add(a);
-
+		pagination.setTotalItemCount(articles.size());
+	
 		System.out.println("게시물이 등록되었습니다.");
 		articleNo++;
 	}
@@ -443,13 +456,13 @@ public class App {
 	}
 
 	public void makeTestData() {
-		setArticleTestData("안녕하세요", "반갑습니다");
-		setArticleTestData("하이~", "냉무");
-		setArticleTestData("가입인사드립니다.", "잘부탁드립니다.");
-		
-		for(int i = 1; i <= 20; i++) {
-			setArticleTestData("제목" + i, "내용" + i);
-		}
+//		setArticleTestData("안녕하세요", "반갑습니다");
+//		setArticleTestData("하이~", "냉무");
+//		setArticleTestData("가입인사드립니다.", "잘부탁드립니다.");
+//		
+//		for(int i = 1; i <= 20; i++) {
+//			setArticleTestData("제목" + i, "내용" + i);
+//		}
 		
 		setMemberTestData("hong123", "h1234", "홍길동");
 		setMemberTestData("lee123", "l1234", "이순신");
