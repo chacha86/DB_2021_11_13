@@ -1,35 +1,57 @@
 package test2;
 
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class PagingTest {
 
 	public static void main(String[] args) {
-	
-		int currentPageNo = 1;
-		
+
 		Scanner sc = new Scanner(System.in);
+		int currentPageNo = 1;
+		int itemCountPerPage = 3;
+		int pageCountPerBlock = 5;
+		
+		
+		ArrayList<String> datas = new ArrayList<>(); 
+		
+		for(int i = 1; i <= 26; i++) {
+			datas.add(i + ".data");
+		}
+		
+		int totalItemCount = datas.size();
+		int firstPageNo = 1; // 가장 첫번째 페이지 번호
+		int lastPageNo = (int)Math.ceil((double)totalItemCount / itemCountPerPage); // 가장 마지막 페이지 번호
 		
 		while(true) {
 			
+			int currentBlockNo = (int)Math.ceil((double)currentPageNo / pageCountPerBlock);
+			int startPageNoInBlock = pageCountPerBlock * (currentBlockNo - 1) + 1;  
+			int endPageNoInBlock = startPageNoInBlock + pageCountPerBlock - 1;
+			int startIndex = itemCountPerPage * (currentPageNo - 1);
+			int endIndex = startIndex + itemCountPerPage;
 			
-			// 1 / 5 - 1
-			// 2 / 5 - 1
-			// 3 / 5 - 1
-			// 4 / 5 - 1
-			// 5 / 5 - 1
+			if(startPageNoInBlock < firstPageNo) {
+				startPageNoInBlock = firstPageNo;
+			}
 			
-			// 6 / 5 - 2
-			// 7 / 5 - 2
-			// 10 / 5 - 2
+			if(endPageNoInBlock > lastPageNo) {
+				endPageNoInBlock = lastPageNo;
+			}
 			
-			// 올림(현재페이지 / 한블럭당페이지개수)
-			int currentBlockNo = (int)Math.ceil((double)currentPageNo / 5);
+			if(endIndex > totalItemCount) {
+				endIndex = totalItemCount;
+			}
 			
-			int startPageNoInBlock = 5 * (currentBlockNo - 1) + 1;  
-			int endPageNoInBlock = startPageNoInBlock + 4;
+			if(startIndex < 0) {
+				startIndex = 0;
+			}
 			
-			// 2. 현재페이지가 5 > 6으로 바뀔 때 페이지를 6 7 8 9 10
+			
+			for(int i = startIndex; i < endIndex; i++) {
+				System.out.println(datas.get(i));
+			}
+
 			for(int i = startPageNoInBlock; i <= endPageNoInBlock; i++) {
 				if(i == currentPageNo) {
 					System.out.print("[" + i + "] ");				
@@ -37,21 +59,37 @@ public class PagingTest {
 					System.out.print(i + " ");
 				}
 			}
+			
 			System.out.println();
 			System.out.println("페이징 명령어를 입력해주세요 ((prev : 이전,  next : 다음,  go : 선택,  back : 뒤로가기):");
 			String pageCmd = sc.nextLine();
 			
 			if(pageCmd.equals("prev")) {
-				currentPageNo--;
+				if(currentPageNo > firstPageNo) {
+					currentPageNo--;					
+				} else {
+					System.out.println("첫번째 페이지입니다.");
+				}
 			} else if(pageCmd.equals("next")) {
-				currentPageNo++;
+				if(currentPageNo < lastPageNo) {
+					currentPageNo++;					
+				} else {
+					System.out.println("마지막 페이지입니다.");
+				}
 			} else if(pageCmd.equals("go")) {
+				
+				
 				System.out.println("몇번 페이지로 이동하시겠습니까 : ");
-				currentPageNo = Integer.parseInt(sc.nextLine());
+				int selectedPageNo = Integer.parseInt(sc.nextLine());
+				
+				if(selectedPageNo >= firstPageNo && selectedPageNo <= lastPageNo) {
+					currentPageNo = selectedPageNo; 					
+				} else {
+					System.out.println("잘못된 페이지입니다.");
+				}
+				
+				
 			}
 		}
-		
-		
 	}
-
 }
