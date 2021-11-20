@@ -39,41 +39,105 @@ public class AddrMain {
 					System.out.println("전화번호 : " + addr.getPhone());
 					System.out.println("==============================");
 				}
+			} else if(cmd.equals("update")) {
+				System.out.print("수정할 주소록 번호 : ");
+				int idx = Integer.parseInt(sc.nextLine());
+				
+				System.out.print("이름 : ");
+				String name = sc.nextLine();
+				System.out.print("주소 : ");
+				String address = sc.nextLine();
+				System.out.print("전화번호 : ");
+				String phone = sc.nextLine();
+				
+				updateAddress(idx, name, address, phone);
+			} else if(cmd.equals("delete")) {
+				System.out.print("삭제할 주소록 번호 : ");
+				int idx = Integer.parseInt(sc.nextLine());
+				
+				deleteAddress(idx);
 			}
 			
 		}
 		
 	}
 
-	public static void insertAddress(String name, String address, String phone) {
-
-		Connection conn = null;
-		Statement stmt = null;
-		ResultSet rs = null;
-
+	
+	public static Connection getConnection() {
+		
 		String url = "jdbc:mysql://localhost:3306/a1?serverTimezone=UTC";
 		String user = "root";
 		String pass = "";
+		
+		Connection conn = null;
+		
+		try {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+			conn = DriverManager.getConnection(url, user, pass);			
+		} catch (Exception e) {
+			System.out.println("접속 시도중 문제 발생!!");
+		}
+		
+		return conn;
+	}
+	public static void deleteAddress(int idx) {
 
 		try {
-			// 1. 드라이버 세팅
-			Class.forName("com.mysql.cj.jdbc.Driver");
+			
+			Connection conn = getConnection();
+			Statement stmt = conn.createStatement();
 
-			// 2. Connection 획득
-			conn = DriverManager.getConnection(url, user, pass);
+			String sql = "DELETE FROM t_addr WHERE idx = " + idx;
+;
+			System.out.println("sql : " + sql);
+			stmt.executeUpdate(sql);
 
-			// 3. Statement 생성
-			stmt = conn.createStatement();
+			if(stmt != null) {
+				stmt.close();				
+			}
+			if(conn != null) {
+				conn.close();				
+			}
+			
+		} catch (Exception e) {
+			System.out.println("접속 시도중 문제 발생!!");
+		}
+	}
+	
+	public static void updateAddress(int idx, String name, String address, String phone) {
 
-			// 4. SQL 처리
+		try {
+			
+			Connection conn = getConnection();
+			Statement stmt = conn.createStatement();
+
+			String sql = "UPDATE t_addr SET `name` = '" + name + "', address = '" + address + "', phone = '" + phone + "' WHERE idx = " + idx;
+			System.out.println("sql : " + sql);
+			stmt.executeUpdate(sql);
+
+			if(stmt != null) {
+				stmt.close();				
+			}
+			if(conn != null) {
+				conn.close();				
+			}
+			
+		} catch (Exception e) {
+			System.out.println("접속 시도중 문제 발생!!");
+		}
+	}
+	
+	public static void insertAddress(String name, String address, String phone) {
+
+		try {
+			
+			Connection conn = getConnection();
+			Statement stmt = conn.createStatement();
+
 			String sql = "INSERT INTO t_addr SET `name` = '" + name + "', address = '" + address + "', phone = '" + phone + "'";
 			System.out.println("sql : " + sql);
 			stmt.executeUpdate(sql);
 
-			// 5. 작업 다 했으면 자원 반납
-			if(rs != null) {
-				rs.close();				
-			}
 			if(stmt != null) {
 				stmt.close();				
 			}
@@ -89,26 +153,16 @@ public class AddrMain {
 	
 	public static ArrayList<Addr> selectAddresses() {
 
-		Connection conn = null;
-		Statement stmt = null;
-		ResultSet rs = null;
-
-		String url = "jdbc:mysql://localhost:3306/a1?serverTimezone=UTC";
-		String user = "root";
-		String pass = "";
-		
 		ArrayList<Addr> addrList = new ArrayList<>();
 			
 		try {
-			Class.forName("com.mysql.cj.jdbc.Driver");
-			conn = DriverManager.getConnection(url, user, pass);
-			stmt = conn.createStatement();
 
+			Connection conn = getConnection();
+			Statement stmt = conn.createStatement();
 			String sql = "SELECT * FROM t_addr";
 			
 			System.out.println("sql : " + sql);
-			rs = stmt.executeQuery(sql);
-			
+			ResultSet rs = stmt.executeQuery(sql);
 			
 			while(rs.next()) { // 다음 로우로 이동 다음이 있으면 true 반환, 없으면 false 반환
 				
@@ -137,4 +191,6 @@ public class AddrMain {
 		
 		return addrList;
 	}
+	
+	
 }
