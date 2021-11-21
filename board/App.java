@@ -14,17 +14,19 @@ public class App {
 
 	// 변수 선언
 	Scanner sc = new Scanner(System.in);
-	ArrayList<Article> articles = new ArrayList<>();
+	//ArrayList<Article> articles = new ArrayList<>();
 	ArrayList<Member> members = new ArrayList<>();
 	ArrayList<Reply> replies = new ArrayList<>();
 	ArrayList<Like> likes = new ArrayList<>();
 
 	DBUtil dbUtil = new DBUtil();
 	
+	ArrayList<Article> articles = dbUtil.getArticleList();	
 	int articleNo = 1;
 	Member loginedUser = null; // 로그인한 유저
 	Pagination pagination = null;
 
+	
 	// 메서드 선언
 	public void run() {
 
@@ -52,7 +54,7 @@ public class App {
 				}
 
 			} else if (command.equals("list")) {
-				System.out.println(articles.size());
+				articles = dbUtil.getArticleList();
 				list(articles);
 
 			} else if (command.equals("update")) {
@@ -402,9 +404,7 @@ public class App {
 	// ===========================================================
 	// 게시물 목록을 보여주는 함수
 	public void list(ArrayList<Article> articleList) {
-
-		System.out.println(pagination.getStartIndex());
-		System.out.println(pagination.getEndIndex());
+		System.out.println(articleList.size());
 		for (int i = pagination.getStartIndex(); i < pagination.getEndIndex(); i++) {
 			Article a = articleList.get(i);
 			System.out.println("번호 : " + a.getNo());
