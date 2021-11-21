@@ -8,6 +8,7 @@ import java.util.Scanner;
 import board.member.GeneralMember;
 import board.member.Member;
 import board.member.SpecialMember;
+import board.model.DBUtil;
 
 public class App {
 
@@ -18,6 +19,8 @@ public class App {
 	ArrayList<Reply> replies = new ArrayList<>();
 	ArrayList<Like> likes = new ArrayList<>();
 
+	DBUtil dbUtil = new DBUtil();
+	
 	int articleNo = 1;
 	Member loginedUser = null; // 로그인한 유저
 	Pagination pagination = null;
@@ -435,7 +438,12 @@ public class App {
 		// 현재 날짜 구하기 (시스템 시계, 시스템 타임존)
 		String regDate = getCurrentData();
 		Article a = new Article(articleNo, title, loginedUser.getNickname(), body, regDate);
-		articles.add(a);
+		
+		
+		//articles.add(a);
+		dbUtil.insertArticle(a); // dbUtil아 게시물 하나 줄테니까 DB에 저장해
+		
+		
 		pagination.setTotalItemCount(articles.size());
 	
 		System.out.println("게시물이 등록되었습니다.");
