@@ -29,16 +29,7 @@ public class AddrMain {
 				
 			} else if(cmd.equals("list")) {
 				ArrayList<Addr> addrList = selectAddresses();
-				
-				System.out.println("========= 주소록 목록 =========");
-				for(int i = 0; i < addrList.size(); i++) {
-					Addr addr = addrList.get(i);
-					System.out.println("번호 : " + addr.getIdx());
-					System.out.println("이름 : "  + addr.getName());
-					System.out.println("주소 : "  + addr.getAddress());
-					System.out.println("전화번호 : " + addr.getPhone());
-					System.out.println("==============================");
-				}
+				printAddr(addrList);				
 			} else if(cmd.equals("update")) {
 				System.out.print("수정할 주소록 번호 : ");
 				int idx = Integer.parseInt(sc.nextLine());
@@ -56,12 +47,31 @@ public class AddrMain {
 				int idx = Integer.parseInt(sc.nextLine());
 				
 				deleteAddress(idx);
+			} else if(cmd.equals("search")) {
+				
+				System.out.print("검색할 이름을 입력해주세요 : ");
+				String searchName = sc.nextLine();
+				
+				ArrayList<Addr> addrList = selectAddressBySearch(searchName);
+				printAddr(addrList);
+				
 			}
 			
 		}
 		
 	}
 
+	public static void printAddr(ArrayList<Addr> addrList) {
+		System.out.println("========= 주소록 목록 =========");
+		for(int i = 0; i < addrList.size(); i++) {
+			Addr addr = addrList.get(i);
+			System.out.println("번호 : " + addr.getIdx());
+			System.out.println("이름 : "  + addr.getName());
+			System.out.println("주소 : "  + addr.getAddress());
+			System.out.println("전화번호 : " + addr.getPhone());
+			System.out.println("==============================");
+		}
+	}
 	
 	public static Connection getConnection() {
 		
@@ -192,5 +202,44 @@ public class AddrMain {
 		return addrList;
 	}
 	
-	
+	public static ArrayList<Addr> selectAddressBySearch(String searchName) {
+
+		ArrayList<Addr> addrList = new ArrayList<>();
+			
+		try {
+
+			Connection conn = getConnection();
+			Statement stmt = conn.createStatement();
+			String sql = "SELECT * FROM t_addr where name like '%" + searchName + "%'";
+			
+			System.out.println("sql : " + sql);
+			ResultSet rs = stmt.executeQuery(sql);
+			
+			while(rs.next()) { // 다음 로우로 이동 다음이 있으면 true 반환, 없으면 false 반환
+				
+				int idx = rs.getInt("idx");
+				String name = rs.getString("name");
+				String address = rs.getString("address");
+				String phone = rs.getString("phone");
+				
+				Addr a1 = new Addr(idx, name, address, phone);				
+				addrList.add(a1);
+			}
+						
+			if(rs != null) {
+				rs.close();				
+			}
+			if(stmt != null) {
+				stmt.close();				
+			}
+			if(conn != null) {
+				conn.close();				
+			}
+			
+		} catch (Exception e) {
+			System.out.println("접속 시도중 문제 발생!!");
+		}
+		
+		return addrList;
+	}
 }
