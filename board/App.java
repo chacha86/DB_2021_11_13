@@ -9,6 +9,7 @@ import board.member.GeneralMember;
 import board.member.Member;
 import board.member.SpecialMember;
 import board.model.DBUtil;
+import board.model.SqlMapper;
 
 public class App {
 
@@ -19,9 +20,9 @@ public class App {
 	ArrayList<Reply> replies = new ArrayList<>();
 	ArrayList<Like> likes = new ArrayList<>();
 
-	DBUtil dbUtil = new DBUtil();
+	SqlMapper mapper = new SqlMapper();
 	
-	ArrayList<Article> articles = dbUtil.getArticleList();	
+	ArrayList<Article> articles = mapper.getArticleList();	
 	int articleNo = 1;
 	Member loginedUser = null; // 로그인한 유저
 	Pagination pagination = null;
@@ -55,7 +56,7 @@ public class App {
 				}
 
 			} else if (command.equals("list")) {
-				articles = dbUtil.getArticleList();
+				articles = mapper.getArticleList();
 				list(articles);
 
 			} else if (command.equals("update")) {
@@ -189,7 +190,7 @@ public class App {
 		try {
 			int id = Integer.parseInt(sc.nextLine());
 			
-			Article article = dbUtil.getArticleById(id);
+			Article article = mapper.getArticleById(id);
 			
 			
 			if (article != null) {
@@ -368,11 +369,12 @@ public class App {
 	// 게시물을 삭제하는 함수
 	public void delete() {
 		System.out.println("삭제할 게시물 선택 : ");
-		int no = Integer.parseInt(sc.nextLine());
-		int index = getIndexByAritlceNo(no);
+		int id = Integer.parseInt(sc.nextLine());
+		
+		Article article = mapper.getArticleById(id);
 
-		if (index != -1) {
-			articles.remove(index);
+		if (article != null) {
+			mapper.deleteArticle(id);
 		} else {
 			System.out.println("없는 게시물입니다.");
 		}
@@ -383,7 +385,7 @@ public class App {
 	public void update() {
 		System.out.println("수정할 게시물 선택 : ");
 		int id = Integer.parseInt(sc.nextLine());
-		Article article = dbUtil.getArticleById(id);
+		Article article = mapper.getArticleById(id);
 		
 		if(article != null) {
 			
@@ -393,7 +395,7 @@ public class App {
 			String body = sc.nextLine();
 			
 			Article a = new Article(id, title, null, body, null);
-			dbUtil.updateArticle(a);
+			mapper.updateArticle(a);
 			System.out.println("게시물이 수정되었습니다.");			
 		} else {
 			System.out.println("없는 게시물입니다.");
@@ -440,7 +442,7 @@ public class App {
 		
 		
 		//articles.add(a);
-		dbUtil.insertArticle(a); // dbUtil아 게시물 하나 줄테니까 DB에 저장해
+		mapper.insertArticle(a); // dbUtil아 게시물 하나 줄테니까 DB에 저장해
 		pagination.setTotalItemCount(articles.size());
 	
 		System.out.println("게시물이 등록되었습니다.");

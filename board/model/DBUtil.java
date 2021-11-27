@@ -11,8 +11,26 @@ import board.Article;
 
 public class DBUtil {
 	
-	public ArrayList<Article> getArticleList() {
+	public void updateData(String sql) {
+		Connection conn = null;
+		Statement stmt = null;
+		
+		try {
 
+			conn = getConnection();
+			stmt = conn.createStatement();
+			System.out.println("sql : " + sql);
+			stmt.executeUpdate(sql);
+			close(conn, stmt);
+
+		} catch (Exception e) {
+			System.out.println("접속 시도중 문제 발생!!");
+			close(conn, stmt);
+		}
+	}
+	
+	public ArrayList<Article> getDataList(String sql) {
+		
 		ArrayList<Article> articleList = new ArrayList<>();
 		Connection conn = null;
 		Statement stmt = null;
@@ -22,10 +40,8 @@ public class DBUtil {
 
 			conn = getConnection();
 			stmt = conn.createStatement();
-			String sql = "SELECT * FROM article";
-
 			System.out.println("sql : " + sql);
-			 rs = stmt.executeQuery(sql);
+			rs = stmt.executeQuery(sql);
 
 			while (rs.next()) { // 다음 로우로 이동 다음이 있으면 true 반환, 없으면 false 반환
 
@@ -44,103 +60,10 @@ public class DBUtil {
 			System.out.println("접속 시도중 문제 발생!!");
 			close(conn, stmt, rs);
 		}
-
+		
 		return articleList;
 	}
 
-	public Article getArticleById(int id) {
-
-		Article article = null;
-		Connection conn = null;
-		Statement stmt = null;
-		ResultSet rs = null;
-		
-		try {
-
-			conn = getConnection();
-			stmt = conn.createStatement();
-			String sql = "SELECT * FROM article WHERE idx = " + id;
-
-			System.out.println("sql : " + sql);
-			rs = stmt.executeQuery(sql);
-
-			while (rs.next()) { // 다음 로우로 이동 다음이 있으면 true 반환, 없으면 false 반환
-
-				int idx = rs.getInt("idx");
-				String title = rs.getString("title");
-				String body = rs.getString("body");
-				String writer = rs.getString("nickname");
-				String regDate = rs.getString("regDate");
-
-				article = new Article(idx, title, writer, body, regDate);
-			}
-			close(conn, stmt, rs);
-
-		} catch (Exception e) {
-			System.out.println("접속 시도중 문제 발생!!");
-			close(conn, stmt, rs);
-		}
-
-		return article;
-	}
-	
-	
-	
-	
-	public void updateArticle(Article a) {
-		
-		Connection conn = null;
-		Statement stmt = null;
-		
-		try {
-
-			conn = getConnection();
-			stmt = conn.createStatement();
-			String sqlOrigin = """
-
-					UPDATE article
-					SET title = '%s',
-					`body` = '%s'
-					WHERE idx = %d
-
-									""";
-			String sql = String.format(sqlOrigin, a.getTitle(), a.getBody(), a.getNo());
-			stmt.executeUpdate(sql);
-			close(conn, stmt);
-
-		} catch (Exception e) {
-			System.out.println("접속 시도중 문제 발생!!");
-			close(conn, stmt);
-		}
-	}
-	
-	public void insertArticle(Article a) {
-		Connection conn = null;
-		Statement stmt = null;
-		
-		try {
-
-			conn = getConnection();
-			stmt = conn.createStatement();
-
-			String sql = "INSERT INTO article SET title = '" + a.getTitle() + "', `body` = '" + a.getBody()
-					+ "', nickname = '" + a.getWriter() + "', regDate = '" + a.getRegDate() + "'";
-			System.out.println("sql : " + sql);
-			stmt.executeUpdate(sql);
-			close(conn, stmt);
-
-		} catch (Exception e) {
-			System.out.println("접속 시도중 문제 발생!!");
-			close(conn, stmt);
-		}
-	}
-	
-	
-	
-	
-	
-	
-	
 	private void close(Connection conn, Statement stmt) {
 		close(conn, stmt, null);
 	}
