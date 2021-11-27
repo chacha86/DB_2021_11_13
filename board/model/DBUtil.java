@@ -96,9 +96,15 @@ public class DBUtil {
 
 			conn = getConnection();
 			stmt = conn.createStatement();
+			String sqlOrigin = """
 
-			String sql = "UPDATE article SET title = '" + a.getTitle() + "', `body` = '" + a.getBody() + "' WHERE idx = " + a.getNo();
-			System.out.println("sql : " + sql);
+					UPDATE article
+					SET title = '%s',
+					`body` = '%s'
+					WHERE idx = %d
+
+									""";
+			String sql = String.format(sqlOrigin, a.getTitle(), a.getBody(), a.getNo());
 			stmt.executeUpdate(sql);
 			close(conn, stmt);
 

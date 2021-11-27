@@ -392,7 +392,7 @@ public class App {
 			System.out.print("새내용 : ");
 			String body = sc.nextLine();
 			
-			Article a = new Article(no, title, null, body, null);
+			Article a = new Article(id, title, null, body, null);
 			dbUtil.updateArticle(a);
 			System.out.println("게시물이 수정되었습니다.");			
 		} else {
