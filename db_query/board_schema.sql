@@ -19,3 +19,9 @@ INSERT INTO article SET title = 'aaa', `body` = 'bbb', nickname = 'ccc', regDate
 
 SELECT *
 FROM article;
+
+# 게시물 수정 query
+UPDATE article
+SET title = 'kkk',
+`body` = 'jjj'
+WHERE idx = 5;

@@ -382,23 +382,17 @@ public class App {
 		System.out.println("수정할 게시물 선택 : ");
 		int no = Integer.parseInt(sc.nextLine());
 
-		int index = getIndexByAritlceNo(no);
+		//int index = getIndexByAritlceNo(no);
+		
+		System.out.print("새제목 : ");
+		String title = sc.nextLine();
+		System.out.print("새내용 : ");
+		String body = sc.nextLine();
 
-		if (index != -1) {
-			System.out.print("새제목 : ");
-			String title = sc.nextLine();
-			System.out.print("새내용 : ");
-			String body = sc.nextLine();
-
-			Article a = articles.get(index);
-			a.setTitle(title);
-			a.setBody(body);
-
-			articles.set(index, a);
-
-		} else {
-			System.out.println("없는 게시물입니다.");
-		}
+		Article a = new Article(no, title, null, body, null);
+		dbUtil.updateArticle(a);
+		System.out.println("게시물이 수정되었습니다.");
+		
 	}
 
 	// ===========================================================
