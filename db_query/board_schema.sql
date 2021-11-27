@@ -25,3 +25,8 @@ UPDATE article
 SET title = 'kkk',
 `body` = 'jjj'
 WHERE idx = 5;
+
+# 특정 게시물 조회 query
+SELECT *
+FROM article
+WHERE idx = 9;

@@ -48,6 +48,45 @@ public class DBUtil {
 		return articleList;
 	}
 
+	public Article getArticleById(int id) {
+
+		Article article = null;
+		Connection conn = null;
+		Statement stmt = null;
+		ResultSet rs = null;
+		
+		try {
+
+			conn = getConnection();
+			stmt = conn.createStatement();
+			String sql = "SELECT * FROM article WHERE idx = " + id;
+
+			System.out.println("sql : " + sql);
+			rs = stmt.executeQuery(sql);
+
+			while (rs.next()) { // 다음 로우로 이동 다음이 있으면 true 반환, 없으면 false 반환
+
+				int idx = rs.getInt("idx");
+				String title = rs.getString("title");
+				String body = rs.getString("body");
+				String writer = rs.getString("nickname");
+				String regDate = rs.getString("regDate");
+
+				article = new Article(idx, title, writer, body, regDate);
+			}
+			close(conn, stmt, rs);
+
+		} catch (Exception e) {
+			System.out.println("접속 시도중 문제 발생!!");
+			close(conn, stmt, rs);
+		}
+
+		return article;
+	}
+	
+	
+	
+	
 	public void updateArticle(Article a) {
 		
 		Connection conn = null;
@@ -89,21 +128,6 @@ public class DBUtil {
 			close(conn, stmt);
 		}
 	}
-
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	
 	
 	

@@ -33,6 +33,7 @@ public class App {
 		loginedUser = new GeneralMember("hong123", "h1234", "홍길동");
 		makeTestData();
 		pagination = new Pagination(articles.size());
+		
 		while (true) {
 			if (loginedUser == null) {
 				System.out.print("명령어를 입력해주세요 : ");
@@ -186,15 +187,16 @@ public class App {
 		
 		//2. 예외처리
 		try {
-			int no = Integer.parseInt(sc.nextLine());
-			int index = getIndexByAritlceNo(no);
+			int id = Integer.parseInt(sc.nextLine());
 			
-			if (index != -1) {
-				Article a = articles.get(index);
-				
-				printArticleByNo(a);
+			Article article = dbUtil.getArticleById(id);
+			
+			
+			if (article != null) {
+
+				printArticleByNo(article);
 				// 상세보기 기능
-				readProcess(a);
+				readProcess(article);
 				
 			} else {
 				System.out.println("없는 게시물입니다.");
@@ -380,25 +382,28 @@ public class App {
 	// 게시물을 수정해주는 함수
 	public void update() {
 		System.out.println("수정할 게시물 선택 : ");
-		int no = Integer.parseInt(sc.nextLine());
-
-		//int index = getIndexByAritlceNo(no);
+		int id = Integer.parseInt(sc.nextLine());
+		Article article = dbUtil.getArticleById(id);
 		
-		System.out.print("새제목 : ");
-		String title = sc.nextLine();
-		System.out.print("새내용 : ");
-		String body = sc.nextLine();
-
-		Article a = new Article(no, title, null, body, null);
-		dbUtil.updateArticle(a);
-		System.out.println("게시물이 수정되었습니다.");
+		if(article != null) {
+			
+			System.out.print("새제목 : ");
+			String title = sc.nextLine();
+			System.out.print("새내용 : ");
+			String body = sc.nextLine();
+			
+			Article a = new Article(no, title, null, body, null);
+			dbUtil.updateArticle(a);
+			System.out.println("게시물이 수정되었습니다.");			
+		} else {
+			System.out.println("없는 게시물입니다.");
+		}
 		
 	}
 
 	// ===========================================================
 	// 게시물 목록을 보여주는 함수
 	public void list(ArrayList<Article> articleList) {
-		System.out.println(articleList.size());
 		for (int i = pagination.getStartIndex(); i < pagination.getEndIndex(); i++) {
 			Article a = articleList.get(i);
 			System.out.println("번호 : " + a.getNo());
@@ -436,8 +441,6 @@ public class App {
 		
 		//articles.add(a);
 		dbUtil.insertArticle(a); // dbUtil아 게시물 하나 줄테니까 DB에 저장해
-		
-		
 		pagination.setTotalItemCount(articles.size());
 	
 		System.out.println("게시물이 등록되었습니다.");
