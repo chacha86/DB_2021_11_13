@@ -8,6 +8,21 @@ public class SqlMapper {
 	
 	DBUtil db = new DBUtil();
 	
+	public ArrayList<Article> getSearchedList(String keyword) {
+		String sql = """
+				
+				SELECT *
+				FROM article
+				WHERE title LIKE '%%%s%%'
+				
+				""";
+		
+		sql = String.format(sql, keyword);
+		return db.getDataList(sql);
+		
+	}
+	
+	
 	public ArrayList<Article> getArticleList() {
 		String sql = """
 				SELECT *
@@ -21,20 +36,15 @@ public class SqlMapper {
 	public Article getArticleById(int id) {
 
 		String sql = """
+				
 				SELECT *
 				FROM article
 				WHERE idx = %d
+				
 				""";
 		
 		sql = String.format(sql, id);
-		ArrayList<Article> articleList = db.getDataList(sql);
-		
-		System.out.println(articleList.size());
-		
-		if(articleList.size() > 0) {
-			return articleList.get(0);
-		}
-		return null;
+		return db.getData(sql);
 	}
 	
 	
@@ -46,19 +56,21 @@ public class SqlMapper {
 					SET title = '%s',
 					`body` = '%s'
 					WHERE idx = %d
-
-									""";
+					
+					""";
 			sql = String.format(sql, a.getTitle(), a.getBody(), a.getNo());
 			db.updateData(sql);
 	}
 	
 	public void insertArticle(Article a) {
 		String sql = """
+				
 				INSERT INTO article 
 				SET title = '%s', 
 				`body` = '%s', 
 				nickname = '%s',
 				regDate = '%s'
+				
 				""";
 		
 		sql = String.format(sql, a.getTitle(), a.getBody(), a.getWriter(), a.getRegDate());
@@ -67,9 +79,11 @@ public class SqlMapper {
 	
 	public void deleteArticle(int id) {
 		String sql = """
+				
 				DELETE
 				FROM article
 				WHERE idx = %d
+				
 				""";
 		sql = String.format(sql, id);
 		db.updateData(sql);

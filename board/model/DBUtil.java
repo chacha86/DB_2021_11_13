@@ -29,6 +29,15 @@ public class DBUtil {
 		}
 	}
 	
+	public Article getData(String sql) {
+		ArrayList<Article> articleList = getDataList(sql);
+		if(articleList.size() > 0) {
+			return articleList.get(0);
+		}
+		return null;
+	}
+	
+	
 	public ArrayList<Article> getDataList(String sql) {
 		
 		ArrayList<Article> articleList = new ArrayList<>();

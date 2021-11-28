@@ -334,15 +334,7 @@ public class App {
 		System.out.println("검색 키워드 입력 : ");
 		String keyword = sc.nextLine();
 
-		ArrayList<Article> searchedList = new ArrayList<>();
-		// 번호로 찾기
-		for (int i = 0; i < articles.size(); i++) {
-			Article a = articles.get(i);
-			if (a.getTitle().contains(keyword)) {
-				searchedList.add(a);
-			}
-		}
-
+		ArrayList<Article> searchedList = mapper.getSearchedList(keyword);		
 		list(searchedList);
 	}
 
@@ -372,7 +364,6 @@ public class App {
 		int id = Integer.parseInt(sc.nextLine());
 		
 		Article article = mapper.getArticleById(id);
-System.out.println(article.getNo());
 		if (article != null) {
 			mapper.deleteArticle(id);
 		} else {

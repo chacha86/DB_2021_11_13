@@ -30,3 +30,8 @@ WHERE idx = 5;
 SELECT *
 FROM article
 WHERE idx = 9;
+
+# 특정 게시물 삭제 query
+DELETE
+FROM article
+WHERE idx = 9;
