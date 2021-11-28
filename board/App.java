@@ -372,7 +372,7 @@ public class App {
 		int id = Integer.parseInt(sc.nextLine());
 		
 		Article article = mapper.getArticleById(id);
-
+System.out.println(article.getNo());
 		if (article != null) {
 			mapper.deleteArticle(id);
 		} else {

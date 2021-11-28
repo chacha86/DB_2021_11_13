@@ -29,8 +29,10 @@ public class SqlMapper {
 		sql = String.format(sql, id);
 		ArrayList<Article> articleList = db.getDataList(sql);
 		
+		System.out.println(articleList.size());
+		
 		if(articleList.size() > 0) {
-			articleList.get(0);
+			return articleList.get(0);
 		}
 		return null;
 	}
@@ -38,7 +40,7 @@ public class SqlMapper {
 	
 	public void updateArticle(Article a) {
 		
-			String sqlOrigin = """
+			String sql = """
 
 					UPDATE article
 					SET title = '%s',
@@ -46,7 +48,7 @@ public class SqlMapper {
 					WHERE idx = %d
 
 									""";
-			String sql = String.format(sqlOrigin, a.getTitle(), a.getBody(), a.getNo());
+			sql = String.format(sql, a.getTitle(), a.getBody(), a.getNo());
 			db.updateData(sql);
 	}
 	
@@ -59,7 +61,7 @@ public class SqlMapper {
 				regDate = '%s'
 				""";
 		
-		String.format(sql, a.getTitle(), a.getBody(), a.getWriter(), a.getRegDate());
+		sql = String.format(sql, a.getTitle(), a.getBody(), a.getWriter(), a.getRegDate());
 		db.updateData(sql);
 	}
 	
