@@ -3,6 +3,7 @@ package board.model;
 import java.util.ArrayList;
 
 import board.Article;
+import board.member.Member;
 
 public class SqlMapper {
 	
@@ -88,5 +89,19 @@ public class SqlMapper {
 		sql = String.format(sql, id);
 		db.updateData(sql);
 		
+	}
+	
+	public void insertMember(Member m) {
+		String sql = """
+				
+				INSERT INTO `member`
+				SET loginId = '%s',
+				loginPw = '%s',
+				nickname = '%s',
+				regDate = NOW()
+					
+				""";
+		sql = String.format(sql, m.getLoginId(), m.getLoginPw(), m.getNickname());
+		db.updateData(sql);
 	}
 }

@@ -23,6 +23,7 @@ public class App {
 	SqlMapper mapper = new SqlMapper();
 	
 	ArrayList<Article> articles = mapper.getArticleList();	
+	
 	int articleNo = 1;
 	Member loginedUser = null; // 로그인한 유저
 	Pagination pagination = null;
@@ -170,14 +171,9 @@ public class App {
 		String nickname = sc.nextLine();
 
 		Member m = null;
-
-		if (memberFlag == 1) {
-			m = new SpecialMember(loginId, loginPw, nickname, 0);
-		} else {
-			m = new GeneralMember(loginId, loginPw, nickname);
-		}
-
-		members.add(m);
+		
+		m = new GeneralMember(loginId, loginPw, nickname);
+		mapper.insertMember(m);
 		System.out.println("회원가입이 완료되었습니다.");
 	}
 
@@ -335,6 +331,7 @@ public class App {
 		String keyword = sc.nextLine();
 
 		ArrayList<Article> searchedList = mapper.getSearchedList(keyword);		
+		pagination.setTotalItemCount(searchedList.size());
 		list(searchedList);
 	}
 
