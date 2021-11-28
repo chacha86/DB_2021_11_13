@@ -6,10 +6,10 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
 
-import addr.Addr;
 import board.Article;
+import board.member.Member;
 
-public class DBUtil {
+public class MemberDBUtil {
 	
 	public void updateData(String sql) {
 		Connection conn = null;
@@ -29,8 +29,8 @@ public class DBUtil {
 		}
 	}
 	
-	public Article getData(String sql) {
-		ArrayList<Article> articleList = getDataList(sql);
+	public Member getData(String sql) {
+		ArrayList<Member> articleList = getDataList(sql);
 		if(articleList.size() > 0) {
 			return articleList.get(0);
 		}
@@ -38,9 +38,9 @@ public class DBUtil {
 	}
 	
 	
-	public ArrayList<Article> getDataList(String sql) {
+	public ArrayList<Member> getDataList(String sql) {
 		
-		ArrayList<Article> articleList = new ArrayList<>();
+		ArrayList<Member> memberList = new ArrayList<>();
 		Connection conn = null;
 		Statement stmt = null;
 		ResultSet rs = null;
@@ -55,13 +55,13 @@ public class DBUtil {
 			while (rs.next()) { // 다음 로우로 이동 다음이 있으면 true 반환, 없으면 false 반환
 
 				int idx = rs.getInt("idx");
-				String title = rs.getString("title");
-				String body = rs.getString("body");
+				String title = rs.getString("loginId");
+				String body = rs.getString("loginPw");
 				String writer = rs.getString("nickname");
 				String regDate = rs.getString("regDate");
 
-				Article a = new Article(idx, title, writer, body, regDate);
-				articleList.add(a);
+				Member m = new Member(idx, title, writer, body, regDate);
+				memberList.add(m);
 			}
 			close(conn, stmt, rs);
 
@@ -70,7 +70,7 @@ public class DBUtil {
 			close(conn, stmt, rs);
 		}
 		
-		return articleList;
+		return memberList;
 	}
 
 	private void close(Connection conn, Statement stmt) {

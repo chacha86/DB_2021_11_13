@@ -7,7 +7,8 @@ import board.member.Member;
 
 public class SqlMapper {
 	
-	DBUtil db = new DBUtil();
+	ArticleDBUtil articleDB = new ArticleDBUtil();
+	MemberDBUtil memberDB = new MemberDBUtil();
 	
 	public ArrayList<Article> getSearchedList(String keyword) {
 		String sql = """
@@ -19,7 +20,7 @@ public class SqlMapper {
 				""";
 		
 		sql = String.format(sql, keyword);
-		return db.getDataList(sql);
+		return articleDB.getDataList(sql);
 		
 	}
 	
@@ -30,7 +31,7 @@ public class SqlMapper {
 				FROM article
 				""";
 					
-		ArrayList<Article> articleList = db.getDataList(sql);
+		ArrayList<Article> articleList = articleDB.getDataList(sql);
 		return articleList;
 	}
 
@@ -45,7 +46,7 @@ public class SqlMapper {
 				""";
 		
 		sql = String.format(sql, id);
-		return db.getData(sql);
+		return articleDB.getData(sql);
 	}
 	
 	
@@ -60,7 +61,7 @@ public class SqlMapper {
 					
 					""";
 			sql = String.format(sql, a.getTitle(), a.getBody(), a.getNo());
-			db.updateData(sql);
+			articleDB.updateData(sql);
 	}
 	
 	public void insertArticle(Article a) {
@@ -75,7 +76,7 @@ public class SqlMapper {
 				""";
 		
 		sql = String.format(sql, a.getTitle(), a.getBody(), a.getWriter(), a.getRegDate());
-		db.updateData(sql);
+		articleDB.updateData(sql);
 	}
 	
 	public void deleteArticle(int id) {
@@ -87,7 +88,7 @@ public class SqlMapper {
 				
 				""";
 		sql = String.format(sql, id);
-		db.updateData(sql);
+		articleDB.updateData(sql);
 		
 	}
 	
@@ -102,6 +103,19 @@ public class SqlMapper {
 					
 				""";
 		sql = String.format(sql, m.getLoginId(), m.getLoginPw(), m.getNickname());
-		db.updateData(sql);
+		articleDB.updateData(sql);
+	}
+	
+	public Member getMemberLoginIdAndLoginPw(String loginId, String loginPw) {
+		String sql = """
+				
+				SELECT *
+				FROM `member`
+				WHERE loginId = '%s' 
+				AND loginPw = '%s'
+				
+				""";
+		sql = String.format(sql, loginId, loginPw);
+		return memberDB.getData(sql);
 	}
 }

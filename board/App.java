@@ -5,10 +5,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-import board.member.GeneralMember;
 import board.member.Member;
-import board.member.SpecialMember;
-import board.model.DBUtil;
 import board.model.SqlMapper;
 
 public class App {
@@ -32,7 +29,7 @@ public class App {
 	// 메서드 선언
 	public void run() {
 
-		loginedUser = new GeneralMember("hong123", "h1234", "홍길동");
+		loginedUser = new Member(1, "hong123", "h1234", "홍길동", "20211128100000");
 		makeTestData();
 		pagination = new Pagination(articles.size());
 		
@@ -140,20 +137,14 @@ public class App {
 		String loginId = sc.nextLine();
 		System.out.print("비밀번호 : ");
 		String loginPw = sc.nextLine();
+		
+		Member member = mapper.getMemberLoginIdAndLoginPw(loginId, loginPw);		
 
-		for (int i = 0; i < members.size(); i++) {
-			Member m = members.get(i);
-			if (m.getLoginId().equals(loginId)) {
-				if (m.getLoginPw().equals(loginPw)) {
-					loginedUser = m;
-					m.welcome();
-					isSuccessLogin = true;
-				}
-			}
-		}
-
-		if (!isSuccessLogin) {
+		if (member == null) {
 			System.out.println("잘못된 회원정보 틀림");
+		} else {
+			loginedUser = member;
+			System.out.println("로그인 성공. 환영합니다!");
 		}
 
 	}
@@ -172,7 +163,7 @@ public class App {
 
 		Member m = null;
 		
-		m = new GeneralMember(loginId, loginPw, nickname);
+		m = new Member(loginId, loginPw, nickname);
 		mapper.insertMember(m);
 		System.out.println("회원가입이 완료되었습니다.");
 	}
@@ -467,7 +458,7 @@ public class App {
 	public void setMemberTestData(String loginId, String loginPw, String nick) {
 
 		String regDate = getCurrentData();
-		Member m1 = new GeneralMember(loginId, loginPw, nick);
+		Member m1 = new Member(loginId, loginPw, nick);
 
 		members.add(m1);
 		System.out.println("테스트 회원이 등록되었습니다.");
