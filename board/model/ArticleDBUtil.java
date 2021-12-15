@@ -25,6 +25,7 @@ public class ArticleDBUtil {
 
 		} catch (Exception e) {
 			System.out.println("접속 시도중 문제 발생!!");
+			e.printStackTrace();
 			close(conn, stmt);
 		}
 	}
@@ -57,16 +58,18 @@ public class ArticleDBUtil {
 				int idx = rs.getInt("idx");
 				String title = rs.getString("title");
 				String body = rs.getString("body");
-				String writer = rs.getString("nickname");
+				int memberIdx = rs.getInt("memberIdx");
+				String nickname = rs.getString("nickname");
 				String regDate = rs.getString("regDate");
 
-				Article a = new Article(idx, title, writer, body, regDate);
+				Article a = new Article(idx, title, memberIdx, nickname, body, regDate);
 				articleList.add(a);
 			}
 			close(conn, stmt, rs);
 
 		} catch (Exception e) {
 			System.out.println("접속 시도중 문제 발생!!");
+			e.printStackTrace();
 			close(conn, stmt, rs);
 		}
 		
@@ -111,6 +114,7 @@ public class ArticleDBUtil {
 			conn = DriverManager.getConnection(url, user, pass);
 		} catch (Exception e) {
 			System.out.println("접속 시도중 문제 발생!!");
+			e.printStackTrace();
 		}
 
 		return conn;

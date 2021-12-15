@@ -4,16 +4,24 @@ public class Article {
 	
 	private int no;
 	private String title;
-	private String writer;
+	private int memberIdx;
+	private String nickname;
 	private String body;
 	private String regDate;
 	
-	public Article(int no, String title, String writer, String body, String regDate) {
+	public Article(int no, String title, int memberIdx, String nickname, String body, String regDate) {
 		this.no = no;
 		this.title = title;
-		this.writer = writer;
+		this.memberIdx = memberIdx;
+		this.nickname = nickname;
 		this.body = body;
 		this.regDate = regDate;
+	}
+
+	public Article(int no, String title, String body) {
+		this.no = no;
+		this.title = title;
+		this.body = body;
 	}
 
 	public int getNo() {
@@ -32,12 +40,20 @@ public class Article {
 		this.title = title;
 	}
 
-	public String getWriter() {
-		return writer;
+	public void setMemberIdx(int memberIdx) {
+		this.memberIdx = memberIdx;
 	}
 
-	public void setWriter(String writer) {
-		this.writer = writer;
+	public int getMemberIdx() {
+		return memberIdx;
+	}
+
+	public String getNickname() {
+		return nickname;
+	}
+
+	public void setNickname(String nickname) {
+		this.nickname = nickname;
 	}
 
 	public String getBody() {

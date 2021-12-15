@@ -221,7 +221,7 @@ public class App {
 
 			if (r.getParentNo() == a.getNo()) {
 				System.out.println("내용 : " + r.getrBody());
-				System.out.println("작성자 : " + r.getWriter());
+				System.out.println("작성자 : " + r.getNickname());
 				System.out.println("작성일 : " + r.getRegDate());
 				System.out.println("=======================");
 			}
@@ -253,14 +253,16 @@ public class App {
 
 				System.out.print("댓글 내용을 입력해주세요 : ");
 				String replyBody = sc.nextLine();
+				// 작성자 번호
+				int memberIdx = loginedUser.getIdx();
 				// 작성자
-				String writer = loginedUser.getNickname();
+				String nickname = loginedUser.getNickname();
 				// 작성일
 				String regDate = getCurrentData();
 				// 어떤 게시물의 댓글?
 				int parentNo = a.getNo();
 
-				Reply reply = new Reply(parentNo, replyBody, writer, regDate);
+				Reply reply = new Reply(parentNo, replyBody, memberIdx, nickname, regDate);
 				replies.add(reply);
 
 				System.out.println("댓글이 등록되었습니다.");
@@ -373,7 +375,7 @@ public class App {
 			System.out.print("새내용 : ");
 			String body = sc.nextLine();
 			
-			Article a = new Article(id, title, null, body, null);
+			Article a = new Article(id, title, body);
 			mapper.updateArticle(a);
 			System.out.println("게시물이 수정되었습니다.");			
 		} else {
@@ -389,7 +391,7 @@ public class App {
 			Article a = articleList.get(i);
 			System.out.println("번호 : " + a.getNo());
 			System.out.println("제목 : " + a.getTitle());
-			System.out.println("작성자 : " + a.getWriter());
+			System.out.println("작성자 : " + a.getNickname());
 			System.out.println("작성일 : " + a.getRegDate());
 			System.out.println("조회수 : " + 0);
 			System.out.println("===============");
@@ -417,7 +419,7 @@ public class App {
 		// 현재 시간 구해서 등록.
 		// 현재 날짜 구하기 (시스템 시계, 시스템 타임존)
 		String regDate = getCurrentData();
-		Article a = new Article(articleNo, title, loginedUser.getNickname(), body, regDate);
+		Article a = new Article(articleNo, title, loginedUser.getIdx(),loginedUser.getNickname(), body, regDate);
 		
 		
 		//articles.add(a);
@@ -467,7 +469,7 @@ public class App {
 	public void setArticleTestData(String title, String body) {
 
 		String regDate = getCurrentData();
-		Article a = new Article(articleNo, title, "홍길동", body, regDate);
+		Article a = new Article(articleNo, title, 1, "홍길동", body, regDate);
 
 		articles.add(a);
 		System.out.println("게시물이 등록되었습니다.");

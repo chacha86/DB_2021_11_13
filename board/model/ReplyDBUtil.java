@@ -1,15 +1,14 @@
 package board.model;
 
+import board.Reply;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
 
-import board.Article;
-import board.member.Member;
-
-public class MemberDBUtil {
+public class ReplyDBUtil {
 	
 	public void updateData(String sql) {
 		Connection conn = null;
@@ -30,18 +29,18 @@ public class MemberDBUtil {
 		}
 	}
 	
-	public Member getData(String sql) {
-		ArrayList<Member> articleList = getDataList(sql);
-		if(articleList.size() > 0) {
-			return articleList.get(0);
+	public Reply getData(String sql) {
+		ArrayList<Reply> replyList = getDataList(sql);
+		if(replyList.size() > 0) {
+			return replyList.get(0);
 		}
 		return null;
 	}
 	
 	
-	public ArrayList<Member> getDataList(String sql) {
+	public ArrayList<Reply> getDataList(String sql) {
 		
-		ArrayList<Member> memberList = new ArrayList<>();
+		ArrayList<Reply> replyList = new ArrayList();
 		Connection conn = null;
 		Statement stmt = null;
 		ResultSet rs = null;
@@ -56,13 +55,13 @@ public class MemberDBUtil {
 			while (rs.next()) { // 다음 로우로 이동 다음이 있으면 true 반환, 없으면 false 반환
 
 				int idx = rs.getInt("idx");
-				String loginId = rs.getString("loginId");
-				String loginPw = rs.getString("loginPw");
+				String body = rs.getString("body");
+				int memberIdx = rs.getInt("memberIdx");
 				String nickname = rs.getString("nickname");
 				String regDate = rs.getString("regDate");
 
-				Member m = new Member(idx, loginId, loginPw, nickname, regDate);
-				memberList.add(m);
+				Reply r = new Reply(idx, body, memberIdx, nickname, regDate);
+				replyList.add(r);
 			}
 			close(conn, stmt, rs);
 
@@ -72,7 +71,7 @@ public class MemberDBUtil {
 			close(conn, stmt, rs);
 		}
 		
-		return memberList;
+		return replyList;
 	}
 
 	private void close(Connection conn, Statement stmt) {

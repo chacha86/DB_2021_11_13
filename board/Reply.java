@@ -4,14 +4,16 @@ public class Reply {
 	
 	private int parentNo;
 	private String rBody;
-	private String writer;
+	private int memberIdx;
+	private String nickname;
 	private String regDate;
 
-	public Reply(int parentNo, String rBody, String writer, String regDate) {
+	public Reply(int parentNo, String rBody, int memberIdx, String nickname, String regDate) {
 		super();
 		this.parentNo = parentNo;
 		this.rBody = rBody;
-		this.writer = writer;
+		this.memberIdx = memberIdx;
+		this.nickname = nickname;
 		this.regDate = regDate;
 	}
 	
@@ -27,11 +29,11 @@ public class Reply {
 	public void setrBody(String rBody) {
 		this.rBody = rBody;
 	}
-	public String getWriter() {
-		return writer;
+	public String getNickname() {
+		return nickname;
 	}
-	public void setWriter(String writer) {
-		this.writer = writer;
+	public void setWriter(String nickname) {
+		this.nickname = nickname;
 	}
 	public String getRegDate() {
 		return regDate;

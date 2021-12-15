@@ -3,19 +3,23 @@ package board.model;
 import java.util.ArrayList;
 
 import board.Article;
+import board.Reply;
 import board.member.Member;
 
 public class SqlMapper {
 	
 	ArticleDBUtil articleDB = new ArticleDBUtil();
 	MemberDBUtil memberDB = new MemberDBUtil();
-	
+	ReplyDBUtil replyDB = new ReplyDBUtil();
+
 	public ArrayList<Article> getSearchedList(String keyword) {
 		String sql = """
 				
-				SELECT *
-				FROM article
-				WHERE title LIKE '%%%s%%'
+				SELECT a.*, m.nickname
+				FROM article a
+				INNER JOIN `member` m
+				ON a.memberIdx = m.idx
+				WHERE a.title LIKE '%%%s%%'
 				
 				""";
 		
@@ -23,12 +27,13 @@ public class SqlMapper {
 		return articleDB.getDataList(sql);
 		
 	}
-	
-	
+
 	public ArrayList<Article> getArticleList() {
 		String sql = """
-				SELECT *
-				FROM article
+				SELECT a.*, m.nickname
+				FROM article a
+				INNER JOIN `member` m
+				ON a.memberIdx = m.idx
 				""";
 					
 		ArrayList<Article> articleList = articleDB.getDataList(sql);
@@ -39,9 +44,11 @@ public class SqlMapper {
 
 		String sql = """
 				
-				SELECT *
-				FROM article
-				WHERE idx = %d
+				SELECT a.*, m.nickname
+				FROM article a
+				INNER JOIN `member`df m
+				ON a.memberIdx = m.idx
+				WHERE a.idx = %d
 				
 				""";
 		
@@ -75,7 +82,7 @@ public class SqlMapper {
 				
 				""";
 		
-		sql = String.format(sql, a.getTitle(), a.getBody(), a.getWriter(), a.getRegDate());
+		sql = String.format(sql, a.getTitle(), a.getBody(), a.getNickname(), a.getRegDate());
 		articleDB.updateData(sql);
 	}
 	
@@ -117,5 +124,19 @@ public class SqlMapper {
 				""";
 		sql = String.format(sql, loginId, loginPw);
 		return memberDB.getData(sql);
+	}
+
+	public ArrayList<Reply> getRepliesByArticleIdx(int articleIdx) {
+		String sql = """
+    			
+    			SELECT ar.*, m.nickname
+    			FROM articleReply ar
+    			INNER JOIN `member` m
+    			ON ar.articleIdx = m.idx
+    			WHERE ar.articleIdx = %d
+    			
+				""";
+		sql = String.format(sql, articleIdx);
+		return replyDB.getDataList(sql);
 	}
 }
