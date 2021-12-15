@@ -12,15 +12,10 @@ public class App {
 
 	// 변수 선언
 	Scanner sc = new Scanner(System.in);
-	//ArrayList<Article> articles = new ArrayList<>();
-	ArrayList<Member> members = new ArrayList<>();
-	ArrayList<Reply> replies = new ArrayList<>();
 	ArrayList<Like> likes = new ArrayList<>();
-
 	SqlMapper mapper = new SqlMapper();
 	
-	ArrayList<Article> articles = mapper.getArticleList();	
-	
+	ArrayList<Article> articles = mapper.getArticleList();
 	int articleNo = 1;
 	Member loginedUser = null; // 로그인한 유저
 	Pagination pagination = null;
@@ -197,8 +192,8 @@ public class App {
 	}
 
 	private void printArticleByNo(Article a) {
-		System.out.println("==== " + a.getNo() + "번 게시물 ====");
-		System.out.println("번호 : " + a.getNo());
+		System.out.println("==== " + a.getIdx() + "번 게시물 ====");
+		System.out.println("번호 : " + a.getIdx());
 		System.out.println("제목 : " + a.getTitle());
 		System.out.println("-------------------");
 		System.out.println("내용 : " + a.getBody());
@@ -206,21 +201,22 @@ public class App {
 		System.out.println("작성자 : 익명");
 		System.out.println("등록날짜: " + a.getRegDate());
 
-		Like like = getLikeByAnoAndId(a.getNo(), loginedUser.getLoginId());
+		Like like = getLikeByAnoAndId(a.getIdx(), loginedUser.getLoginId());
 
 		if (like == null) {
-			System.out.println("좋아요 : ♡ " + getLikeCountByAno(a.getNo()));
+			System.out.println("좋아요 : ♡ " + getLikeCountByAno(a.getIdx()));
 		} else {
-			System.out.println("좋아요 : ♥ " + getLikeCountByAno(a.getNo()));
+			System.out.println("좋아요 : ♥ " + getLikeCountByAno(a.getIdx()));
 		}
 
+		ArrayList<Reply> replies = mapper.getRepliesByArticleIdx(a.getIdx());
 		System.out.println("===================");
 		System.out.println("======== 댓글 =======");
 		for (int i = 0; i < replies.size(); i++) {
 			Reply r = replies.get(i);
 
-			if (r.getParentNo() == a.getNo()) {
-				System.out.println("내용 : " + r.getrBody());
+			if (r.getParentNo() == a.getIdx()) {
+				System.out.println("내용 : " + r.getBody());
 				System.out.println("작성자 : " + r.getNickname());
 				System.out.println("작성일 : " + r.getRegDate());
 				System.out.println("=======================");
@@ -260,11 +256,10 @@ public class App {
 				// 작성일
 				String regDate = getCurrentData();
 				// 어떤 게시물의 댓글?
-				int parentNo = a.getNo();
+				int parentNo = a.getIdx();
 
 				Reply reply = new Reply(parentNo, replyBody, memberIdx, nickname, regDate);
-				replies.add(reply);
-
+				mapper.insertReply(reply);
 				System.out.println("댓글이 등록되었습니다.");
 				printArticleByNo(a);
 
@@ -272,14 +267,14 @@ public class App {
 
 				// 로그인한 유저가 해당 게시물에 좋아요 체크했는지 따져봄
 				String loginId = loginedUser.getLoginId();
-				int articleNo = a.getNo();
+				int articleNo = a.getIdx();
 
 				Like like = getLikeByAnoAndId(articleNo, loginId);
 
 				if (like == null) {
 					// 좋아요 저장
 					// 누가(회원아이디) , 어떤(게시물 아이디), 날짜(오늘날짜)
-					likes.add(new Like(loginedUser.getLoginId(), a.getNo(), getCurrentData()));
+					likes.add(new Like(loginedUser.getLoginId(), a.getIdx(), getCurrentData()));
 					System.out.println("해당게시물을 좋아합니다.");
 
 				} else {
@@ -338,7 +333,7 @@ public class App {
 
 			Article a = articles.get(i);
 
-			if (no == a.getNo()) {
+			if (no == a.getIdx()) {
 				index = i;
 				break;
 			}
@@ -389,7 +384,7 @@ public class App {
 	public void list(ArrayList<Article> articleList) {
 		for (int i = pagination.getStartIndex(); i < pagination.getEndIndex(); i++) {
 			Article a = articleList.get(i);
-			System.out.println("번호 : " + a.getNo());
+			System.out.println("번호 : " + a.getIdx());
 			System.out.println("제목 : " + a.getTitle());
 			System.out.println("작성자 : " + a.getNickname());
 			System.out.println("작성일 : " + a.getRegDate());
@@ -462,7 +457,7 @@ public class App {
 		String regDate = getCurrentData();
 		Member m1 = new Member(loginId, loginPw, nick);
 
-		members.add(m1);
+		mapper.insertMember(m1);
 		System.out.println("테스트 회원이 등록되었습니다.");
 	}
 

@@ -2,15 +2,15 @@ package board;
 
 public class Article {
 	
-	private int no;
+	private int idx;
 	private String title;
 	private int memberIdx;
 	private String nickname;
 	private String body;
 	private String regDate;
 	
-	public Article(int no, String title, int memberIdx, String nickname, String body, String regDate) {
-		this.no = no;
+	public Article(int idx, String title, int memberIdx, String nickname, String body, String regDate) {
+		this.idx = idx;
 		this.title = title;
 		this.memberIdx = memberIdx;
 		this.nickname = nickname;
@@ -18,18 +18,18 @@ public class Article {
 		this.regDate = regDate;
 	}
 
-	public Article(int no, String title, String body) {
-		this.no = no;
+	public Article(int idx, String title, String body) {
+		this.idx = idx;
 		this.title = title;
 		this.body = body;
 	}
 
-	public int getNo() {
-		return no;
+	public int getIdx() {
+		return idx;
 	}
 
-	public void setNo(int no) {
-		this.no = no;
+	public void setIdx(int idx) {
+		this.idx = idx;
 	}
 
 	public String getTitle() {

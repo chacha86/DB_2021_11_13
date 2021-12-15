@@ -1,17 +1,16 @@
 package board;
 
 public class Reply {
-	
+	private int idx;
 	private int parentNo;
-	private String rBody;
+	private String body;
 	private int memberIdx;
 	private String nickname;
 	private String regDate;
 
-	public Reply(int parentNo, String rBody, int memberIdx, String nickname, String regDate) {
-		super();
+	public Reply(int parentNo, String body, int memberIdx, String nickname, String regDate) {
 		this.parentNo = parentNo;
-		this.rBody = rBody;
+		this.body = body;
 		this.memberIdx = memberIdx;
 		this.nickname = nickname;
 		this.regDate = regDate;
@@ -23,11 +22,11 @@ public class Reply {
 	public void setParentNo(int parentNo) {
 		this.parentNo = parentNo;
 	}
-	public String getrBody() {
-		return rBody;
+	public String getBody() {
+		return body;
 	}
-	public void setrBody(String rBody) {
-		this.rBody = rBody;
+	public void setBody(String rBody) {
+		this.body = body;
 	}
 	public String getNickname() {
 		return nickname;
@@ -40,5 +39,21 @@ public class Reply {
 	}
 	public void setRegDate(String regDate) {
 		this.regDate = regDate;
+	}
+
+	public int getIdx() {
+		return idx;
+	}
+
+	public void setIdx(int idx) {
+		this.idx = idx;
+	}
+
+	public int getMemberIdx() {
+		return memberIdx;
+	}
+
+	public void setMemberIdx(int memberIdx) {
+		this.memberIdx = memberIdx;
 	}
 }

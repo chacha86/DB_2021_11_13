@@ -30,7 +30,7 @@ public class SqlMapper {
 
 	public ArrayList<Article> getArticleList() {
 		String sql = """
-				SELECT a.*, m.nickname
+				SELECT a.*, m.nicknam
 				FROM article a
 				INNER JOIN `member` m
 				ON a.memberIdx = m.idx
@@ -67,7 +67,7 @@ public class SqlMapper {
 					WHERE idx = %d
 					
 					""";
-			sql = String.format(sql, a.getTitle(), a.getBody(), a.getNo());
+			sql = String.format(sql, a.getTitle(), a.getBody(), a.getIdx());
 			articleDB.updateData(sql);
 	}
 	
@@ -138,5 +138,20 @@ public class SqlMapper {
 				""";
 		sql = String.format(sql, articleIdx);
 		return replyDB.getDataList(sql);
+	}
+
+	public void insertReply(Reply reply) {
+		String sql = """
+							
+				INSERT INTO articleReply
+			    SET articleIdx = %d,
+			    body = '%s',
+			    memberIdx = %d,
+			    regDate = NOW(),
+			    updateDate = NOW()
+						
+				""";
+		sql = String.format(sql, reply.getIdx(), reply.getBody(), reply.getMemberIdx());
+		replyDB.updateData(sql);
 	}
 }
