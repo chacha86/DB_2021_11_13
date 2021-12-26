@@ -9,13 +9,13 @@ CREATE TABLE article (
     idx INT(5) PRIMARY KEY AUTO_INCREMENT,
     title VARCHAR(200) NOT NULL,
     `body` TEXT NOT NULL,
-    nickname VARCHAR(50),
+    memberIdx INT(5),
     regDate DATETIME # 게시물 등록일
 );
 
 DESC article;
 
-INSERT INTO article SET title = 'aaa', `body` = 'bbb', nickname = 'ccc', regDate = '20211121103300';
+INSERT INTO article SET title = 'aaa', `body` = 'bbb', memberIdx = 1, regDate = '20211121103300';
 
 SELECT *
 FROM article;
